@@ -11,10 +11,10 @@ export default class Registry<S = Record<string, any>> {
     this.id = id || generateToken({ format: 'hex' })
   }
 
-  public async register(subject: S): Promise<string> {
+  public async register(subject: S, category?: string): Promise<string> {
     const token = generateToken({ byteSize: 128, concern: 'registry', seed: this.id })
 
-    await this.engine.set(token, subject)
+    await this.engine.set(token, subject, category)
 
     return token
   }
@@ -25,5 +25,17 @@ export default class Registry<S = Record<string, any>> {
 
   public async dispose(token: string): Promise<void> {
     await this.engine.delete(token)
+  }
+
+  public async categories(): Promise<string[]> {
+    return await this.engine.listCategories()
+  }
+
+  public async category(category: string): Promise<S[]> {
+    return (await this.engine.getCategory(category)) as any
+  }
+
+  public async clear(): Promise<void> {
+    await this.engine.clear()
   }
 }

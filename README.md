@@ -26,9 +26,39 @@ const token = await registry.register({ id: 4 })
 const myData = await registry.retrieve(token)
 
 await registry.dispose(token)
+
+console.log(myData)
+
+// > { id: 4 }
 ```
 
 > By default a registry uses a memory engine to store data, this may not be suitable for production environments.
+
+## Categories
+
+You can attach a category to the registered subject for later grouping it.
+
+```js
+import { Registry } from '@universal-packages/token-registry'
+
+const registry = new Registry()
+
+const token = await registry.register({ id: 4 }, 'user:4')
+const token2 = await registry.register({ id: 4, browser: 'chrome' }, 'user:4')
+
+const categories = await registry.categories()
+const group = await registry.category('user:4')
+
+console.log(categories)
+console.log(group)
+
+// > ['user:4']
+// > { 'token': { id: 4 }, 'token2': { id: 4, browser: 'chrome' } }
+```
+
+## clear()
+
+Use `clear()` to empty the registry as a whole.
 
 ## Engine
 
@@ -36,9 +66,14 @@ To create an engine that suits your requirements you just need to implement a ne
 
 ```js
 export default class MyEngine implements EngineInterface {
-  set(token, subject) {
+  clear() {
+    // Clear the engine from all entries
+  }
+
+  set(token, subject, category) {
     // Store the subject using the token as key
     // You may need to serialize the subject manually
+    // Manage category  for later grouping if present
   }
 
   get(token) {
@@ -47,6 +82,15 @@ export default class MyEngine implements EngineInterface {
 
   delete(token) {
     // delete the entry from your engine using the token
+  }
+
+  getCategory(category) {
+    // Return an object in the shape of { '${token}': subject }
+    // Filter only the tokens that are attached to the category
+  }
+
+  listCategories() {
+    // Keep track of all active categories and return them in an array
   }
 }
 ```
