@@ -5,15 +5,15 @@ export interface TokenRegistry {
   }
 }
 
-export interface MemoryCategories {
+export interface CategoryGroups {
   [category: string]: string[]
 }
 
 export interface EngineInterface {
   clear: () => void | Promise<void>
-  set: (token: string, subject: Record<string, any>, category?: string) => void | Promise<void>
-  get: (token: string) => Record<string, any> | Promise<Record<string, any>>
   delete: (token: string) => void | Promise<void>
-  getCategory: (category: string) => Record<string, any> | Promise<Record<string, any>>
+  get: (token: string) => Record<string, any> | Promise<Record<string, any>>
+  getGroup: (category: string) => Record<string, any> | Promise<Record<string, any>>
   listCategories: () => string[] | Promise<string[]>
+  set: (token: string, subject: Record<string, any>, category?: string) => void | Promise<void>
 }

@@ -34,9 +34,9 @@ console.log(myData)
 
 > By default a registry uses a memory engine to store data, this may not be suitable for production environments.
 
-## Categories
+## Grouping
 
-You can attach a category to the registered subject for later grouping it.
+You can attach a category to the registered token to get grouped subjects later.
 
 ```js
 import { Registry } from '@universal-packages/token-registry'
@@ -47,7 +47,7 @@ const token = await registry.register({ id: 4 }, 'user:4')
 const token2 = await registry.register({ id: 4, browser: 'chrome' }, 'user:4')
 
 const categories = await registry.categories()
-const group = await registry.category('user:4')
+const grouped = await registry.groupBy('user:4')
 
 console.log(categories)
 console.log(group)

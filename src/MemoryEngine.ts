@@ -1,25 +1,12 @@
-import { EngineInterface, MemoryCategories, TokenRegistry } from './types'
+import { CategoryGroups, EngineInterface, TokenRegistry } from './types'
 
 export default class MemoryEngine implements EngineInterface {
   private registry: TokenRegistry = {}
-  private categories: MemoryCategories = {}
+  private categoryGroups: CategoryGroups = {}
 
   public clear(): void {
     this.registry = {}
-    this.categories = {}
-  }
-
-  public set(token: string, subject: Record<string, any>, category?: string): void {
-    this.registry[token] = { subject, category }
-
-    if (category) {
-      this.categories[category] = this.categories[category] || []
-      this.categories[category].push(token)
-    }
-  }
-
-  public get(token: string): Record<string, any> {
-    return this.registry[token]?.subject
+    this.categoryGroups = {}
   }
 
   public delete(token: string): void {
@@ -27,20 +14,24 @@ export default class MemoryEngine implements EngineInterface {
 
     if (entry) {
       if (entry.category) {
-        const category = this.categories[entry.category]
-        const index = category.indexOf(token)
+        const group = this.categoryGroups[entry.category]
+        const index = group.indexOf(token)
 
-        if (index > -1) category.splice(index, 1)
+        if (index > -1) group.splice(index, 1)
 
-        if (category.length === 0) delete this.categories[entry.category]
+        if (group.length === 0) delete this.categoryGroups[entry.category]
       }
 
       delete this.registry[token]
     }
   }
 
-  public getCategory(category: string): Record<string, any> {
-    const tokens = this.categories[category]
+  public get(token: string): Record<string, any> {
+    return this.registry[token]?.subject
+  }
+
+  public getGroup(category: string): Record<string, any> {
+    const tokens = this.categoryGroups[category]
 
     if (tokens) {
       return tokens.reduce((final: Record<string, any>, token: string): Record<string, any> => {
@@ -51,7 +42,16 @@ export default class MemoryEngine implements EngineInterface {
     }
   }
 
+  public set(token: string, subject: Record<string, any>, category?: string): void {
+    this.registry[token] = { subject, category }
+
+    if (category) {
+      this.categoryGroups[category] = this.categoryGroups[category] || []
+      this.categoryGroups[category].push(token)
+    }
+  }
+
   public listCategories(): string[] {
-    return Object.keys(this.categories)
+    return Object.keys(this.categoryGroups)
   }
 }
