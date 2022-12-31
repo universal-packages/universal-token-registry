@@ -1,12 +1,6 @@
-export interface TokenRegistry {
-  [token: string]: {
-    category: string
-    subject: Record<string, any>
-  }
-}
-
-export interface CategoryGroups {
-  [category: string]: string[]
+export interface RegistryOptions {
+  engine?: EngineInterface
+  seed?: string
 }
 
 export interface EngineInterface {

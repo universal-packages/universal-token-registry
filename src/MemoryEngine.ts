@@ -1,8 +1,9 @@
-import { CategoryGroups, EngineInterface, TokenRegistry } from './types'
+import { EngineInterface } from './types'
 
 export default class MemoryEngine implements EngineInterface {
-  private registry: TokenRegistry = {}
-  private categoryGroups: CategoryGroups = {}
+  private registry: Record<string, Record<string, any>> = {}
+  private categoryGroups: Record<string, string[]> = {}
+  private tokenCategories: Record<string, string> = {}
 
   public clear(): void {
     this.registry = {}
@@ -13,13 +14,17 @@ export default class MemoryEngine implements EngineInterface {
     const entry = this.registry[token]
 
     if (entry) {
-      if (entry.category) {
-        const group = this.categoryGroups[entry.category]
+      const category = this.tokenCategories[token]
+
+      if (category) {
+        const group = this.categoryGroups[category]
         const index = group.indexOf(token)
 
         if (index > -1) group.splice(index, 1)
 
-        if (group.length === 0) delete this.categoryGroups[entry.category]
+        if (group.length === 0) delete this.categoryGroups[category]
+
+        delete this.tokenCategories[token]
       }
 
       delete this.registry[token]
@@ -27,7 +32,7 @@ export default class MemoryEngine implements EngineInterface {
   }
 
   public get(token: string): Record<string, any> {
-    return this.registry[token]?.subject
+    return this.registry[token]
   }
 
   public getGroup(category: string): Record<string, any> {
@@ -35,7 +40,7 @@ export default class MemoryEngine implements EngineInterface {
 
     if (tokens) {
       return tokens.reduce((final: Record<string, any>, token: string): Record<string, any> => {
-        final[token] = this.registry[token].subject
+        final[token] = this.registry[token]
 
         return final
       }, {})
@@ -43,11 +48,12 @@ export default class MemoryEngine implements EngineInterface {
   }
 
   public set(token: string, subject: Record<string, any>, category?: string): void {
-    this.registry[token] = { subject, category }
+    this.registry[token] = subject
 
     if (category) {
       this.categoryGroups[category] = this.categoryGroups[category] || []
       this.categoryGroups[category].push(token)
+      this.tokenCategories[token] = category
     }
   }
 

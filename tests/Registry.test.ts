@@ -11,7 +11,7 @@ describe('Registry', (): void => {
       set: jest.fn()
     }
 
-    const registry = new Registry(mockEngine)
+    const registry = new Registry({ engine: mockEngine })
 
     const token = await registry.register({ property: 'a' }, 'user:1')
     registry.retrieve(token)
@@ -33,7 +33,7 @@ describe('Registry', (): void => {
   it('uses the memory engine by default', async (): Promise<void> => {
     const registry = new Registry()
 
-    expect(registry.engine).toEqual(expect.any(MemoryEngine))
+    expect(registry.options.engine).toEqual(expect.any(MemoryEngine))
 
     const subject = { property: 'a' }
     const token = await registry.register(subject)
@@ -48,19 +48,21 @@ describe('Registry', (): void => {
     const token2 = await registry.register(subject, 'user:2')
     const token3 = await registry.register(subject, 'user:2')
 
+    await registry.update(token3, { ...subject, updated: true })
+
     expect(await registry.categories()).toEqual(['user:1', 'user:2'])
     expect(await registry.groupBy('user:1')).toEqual({ [token1]: subject })
-    expect(await registry.groupBy('user:2')).toEqual({ [token2]: subject, [token3]: subject })
+    expect(await registry.groupBy('user:2')).toEqual({ [token2]: subject, [token3]: { ...subject, updated: true } })
 
     await registry.dispose(token2)
     expect(await registry.categories()).toEqual(['user:1', 'user:2'])
     expect(await registry.groupBy('user:1')).toEqual({ [token1]: subject })
-    expect(await registry.groupBy('user:2')).toEqual({ [token3]: subject })
+    expect(await registry.groupBy('user:2')).toEqual({ [token3]: { ...subject, updated: true } })
 
     await registry.dispose(token1)
     expect(await registry.categories()).toEqual(['user:2'])
     expect(await registry.groupBy('user:1')).toBeUndefined()
-    expect(await registry.groupBy('user:2')).toEqual({ [token3]: subject })
+    expect(await registry.groupBy('user:2')).toEqual({ [token3]: { ...subject, updated: true } })
 
     await registry.dispose(token3)
     expect(await registry.categories()).toEqual([])
