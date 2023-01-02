@@ -11,24 +11,20 @@ export default class MemoryEngine implements EngineInterface {
   }
 
   public delete(token: string): void {
-    const entry = this.registry[token]
+    const category = this.tokenCategories[token]
 
-    if (entry) {
-      const category = this.tokenCategories[token]
+    if (category) {
+      const group = this.categoryGroups[category]
+      const index = group.indexOf(token)
 
-      if (category) {
-        const group = this.categoryGroups[category]
-        const index = group.indexOf(token)
+      if (index > -1) group.splice(index, 1)
 
-        if (index > -1) group.splice(index, 1)
+      if (group.length === 0) delete this.categoryGroups[category]
 
-        if (group.length === 0) delete this.categoryGroups[category]
-
-        delete this.tokenCategories[token]
-      }
-
-      delete this.registry[token]
+      delete this.tokenCategories[token]
     }
+
+    delete this.registry[token]
   }
 
   public get(token: string): Record<string, any> {
