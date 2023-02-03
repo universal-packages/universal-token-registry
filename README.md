@@ -40,7 +40,7 @@ console.log(myData)
   Helps to add randomness to the token generation between instances
 
 ### Instance methods
-#### Register `(subject: Object, category?: String)`
+#### **`Register(subject: Object, category?: String)`**
 
 Registers a new data subject under a newly generated token and returns that new token, a category can optionally be passed to group the registered data subjects later.
 
@@ -48,7 +48,7 @@ Registers a new data subject under a newly generated token and returns that new 
 const token = await registry.register({ id: 4 })
 ```
 
-#### retrieve `(token: String)`
+#### **`retrieve(token: String)`**
 
 Returns the subject register under the provided token.
 
@@ -64,7 +64,7 @@ Disposes the data subject registered under the provided token so it's no longer 
 await registry.dispose(token)
 ```
 
-#### update `(token: String, subject: Object)`
+#### **`update(token: String, subject: Object)`**
 
 Sets or updates a data subject under the provided token.
 
@@ -74,7 +74,7 @@ Sets or updates a data subject under the provided token.
 await registry.update(token, { id: 4, updated: true })
 ```
 
-#### categories `()`
+#### **`categories()`**
 
 Returns all teh categories in which subjects have been registered.
 
@@ -82,7 +82,7 @@ Returns all teh categories in which subjects have been registered.
 const categories = await registry.categories()
 ```
 
-#### groupBy `(category: String)`
+#### **`groupBy(category: String)`**
 
 Returns all the subject under their tokens registered under the given category.
 
@@ -94,7 +94,7 @@ console.log(group)
 // > { token: { data: 'example' }, token2: { data: 'example-2' } }
 ```
 
-#### clear `()`
+#### **`clear()`**
 
 Clears all registered data.
 
