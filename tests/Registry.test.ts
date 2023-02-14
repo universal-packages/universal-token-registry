@@ -33,7 +33,7 @@ describe('Registry', (): void => {
   it('uses the memory engine by default', async (): Promise<void> => {
     const registry = new Registry()
 
-    expect(registry.options.engine).toEqual(expect.any(MemoryEngine))
+    expect(registry).toMatchObject({ engine: expect.any(MemoryEngine) })
 
     const subject = { property: 'a' }
     const token = await registry.register(subject)
@@ -75,5 +75,18 @@ describe('Registry', (): void => {
 
     expect(await registry.categories()).toEqual([])
     expect(await registry.retrieve(token4)).toBeUndefined()
+  })
+
+  it('Sets adapters from string', async (): Promise<void> => {
+    const registry = new Registry({ engine: 'memory' })
+
+    expect(registry).toMatchObject({ engine: expect.any(MemoryEngine) })
+  })
+
+  it('Sets adapters from objects', async (): Promise<void> => {
+    const engine = new MemoryEngine()
+    const registry = new Registry({ engine })
+
+    expect(registry).toMatchObject({ engine })
   })
 })

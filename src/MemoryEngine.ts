@@ -1,4 +1,4 @@
-import { EngineInterface } from './types'
+import { EngineInterface } from './Registry.types'
 
 export default class MemoryEngine implements EngineInterface {
   private registry: Record<string, Record<string, any>> = {}
