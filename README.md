@@ -34,12 +34,13 @@ console.log(myData)
 
 ### Options
 
-- **`engine`** `Engine`
+- **`engine`** `Engine` `default: memory`
   Instance of the engine to be used to store the data
 - **`seed`** `String`
   Helps to add randomness to the token generation between instances
 
 ### Instance methods
+
 #### **`Register(subject: Object, category?: String)`**
 
 Registers a new data subject under a newly generated token and returns that new token, a category can optionally be passed to group the registered data subjects later.
@@ -47,6 +48,14 @@ Registers a new data subject under a newly generated token and returns that new 
 ```js
 const token = await registry.register({ id: 4 })
 ```
+
+#### **`initialize()`** **`async`**
+
+Initialize the internal engine in case it needs preparation.
+
+#### **`release()`** **`async`**
+
+Releases the engine resources in case they need to be disposed before finishing the process.
 
 #### **`retrieve(token: String)`**
 
@@ -109,11 +118,23 @@ To create an engine that suits your requirements you just need to implement a ne
 ```js
 import MyEngine from './MyEngine'
 
-const registry = new Registry(new MyEngine())
+const registry = new Registry({ engine: new MyEngine() })
 ```
 
 ```js
 export default class MyEngine implements EngineInterface {
+  constructor(options) {
+    // Options passed through the adapters sub system
+  }
+
+  initialize() {
+    // Initialize any connection using options
+  }
+
+  release() {
+    // Release any resources or close any connection
+  }
+
   clear() {
     // Clear the engine from all entries
   }

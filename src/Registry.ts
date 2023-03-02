@@ -12,6 +12,14 @@ export default class Registry<S = Record<string, any>> {
     this.engine = this.generateEngine()
   }
 
+  public async initialize(): Promise<void> {
+    if (this.engine.initialize) await this.engine.initialize()
+  }
+
+  public async release(): Promise<void> {
+    if (this.engine.release) await this.engine.release()
+  }
+
   public async clear(): Promise<void> {
     await this.engine.clear()
   }

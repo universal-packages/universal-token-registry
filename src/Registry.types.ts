@@ -5,6 +5,8 @@ export interface RegistryOptions {
 }
 
 export interface EngineInterface {
+  initialize?: () => void | Promise<void>
+  release?: () => void | Promise<void>
   clear: () => void | Promise<void>
   delete: (token: string) => void | Promise<void>
   get: (token: string) => Record<string, any> | Promise<Record<string, any>>
