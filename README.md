@@ -36,12 +36,14 @@ console.log(myData)
 
 - **`engine`** `Engine` `default: memory`
   Instance of the engine to be used to store the data
+- **`engineOptions`** `Object`
+  Options to pass to the engine if resolved as adapter.
 - **`seed`** `String`
   Helps to add randomness to the token generation between instances
 
 ### Instance methods
 
-#### **`Register(subject: Object, category?: String)`**
+#### **`register(subject: Object, category?: String)`**
 
 Registers a new data subject under a newly generated token and returns that new token, a category can optionally be passed to group the registered data subjects later.
 
@@ -65,7 +67,7 @@ Returns the subject register under the provided token.
 const subject = await registry.retrieve(token)
 ```
 
-#### dispose `(token: String)`
+#### **dispose `(token: String)`**
 
 Disposes the data subject registered under the provided token so it's no longer retrievable.
 
