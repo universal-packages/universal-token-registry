@@ -45,7 +45,9 @@ console.log(myData)
 
 #### **`register(subject: Object, category?: String)`**
 
-Registers a new data subject under a newly generated token and returns that new token, a category can optionally be passed to group the registered data subjects later.
+#### **`register(token: string, subject: Object, category?: String)`**
+
+Registers a new data subject under a newly generated token and returns that new token, a category can optionally be passed to group the registered data subjects later. If a token is passed it will be used instead of generating a new one (useful to update a subject).
 
 ```js
 const token = await registry.register({ id: 4 })
@@ -67,42 +69,20 @@ Returns the subject register under the provided token.
 const subject = await registry.retrieve(token)
 ```
 
+#### **`retrieveAll(category: String)`**
+
+Returns all the subjects registered under the provided category.
+
+```js
+const subjects = await registry.retrieveAll(token)
+```
+
 #### **dispose `(token: String)`**
 
 Disposes the data subject registered under the provided token so it's no longer retrievable.
 
 ```js
 await registry.dispose(token)
-```
-
-#### **`update(token: String, subject: Object)`**
-
-Sets or updates a data subject under the provided token.
-
-> **WARNING:** You can pass any string as token so make sure to respect the internal secure token system.
-
-```js
-await registry.update(token, { id: 4, updated: true })
-```
-
-#### **`categories()`**
-
-Returns all teh categories in which subjects have been registered.
-
-```js
-const categories = await registry.categories()
-```
-
-#### **`groupBy(category: String)`**
-
-Returns all the subject under their tokens registered under the given category.
-
-```js
-const group = await registry.groupBy('group')
-
-console.log(group)
-
-// > { token: { data: 'example' }, token2: { data: 'example-2' } }
 ```
 
 #### **`clear()`**
@@ -148,20 +128,16 @@ export default class MyEngine implements EngineInterface {
   }
 
   get(token) {
-    return // retrieve the subject from your engine using the token
+    // retrieve the subject from your engine using the token
   }
 
-  delete(token) {
-    // delete the entry from your engine using the token
-  }
-
-  getCategory(category) {
+  getAll(category) {
     // Return an object in the shape of { '${token}': subject }
     // Filter only the tokens that are attached to the category
   }
 
-  listCategories() {
-    // Keep track of all active categories and return them in an array
+  delete(token) {
+    // delete the entry from your engine using the token
   }
 }
 ```

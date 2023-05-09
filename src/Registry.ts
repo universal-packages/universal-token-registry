@@ -24,32 +24,28 @@ export default class Registry<S = Record<string, any>> {
     await this.engine.clear()
   }
 
-  public async categories(): Promise<string[]> {
-    return await this.engine.listCategories()
-  }
-
   public async dispose(token: string): Promise<void> {
     await this.engine.delete(token)
   }
 
-  public async groupBy(category: string): Promise<S[]> {
-    return (await this.engine.getGroup(category)) as any
-  }
+  public async register(token: string, subject: S, category?: string): Promise<string>
+  public async register(subject: S, category?: string): Promise<string>
+  public async register(tokenOrSubject: S | string, subjectOrCategory?: S | string, category: string = 'any'): Promise<string> {
+    const actualToken = typeof tokenOrSubject === 'string' ? tokenOrSubject : generateToken({ byteSize: 128, concern: 'registry', seed: this.options.seed })
+    const actualSubject = typeof tokenOrSubject === 'string' ? (subjectOrCategory as S) : tokenOrSubject
+    const actualCategory = typeof tokenOrSubject === 'string' ? category : (subjectOrCategory as string) || 'any'
 
-  public async register(subject: S, category?: string): Promise<string> {
-    const token = generateToken({ byteSize: 128, concern: 'registry', seed: this.options.seed })
+    await this.engine.set(actualToken, actualCategory, actualSubject)
 
-    await this.engine.set(token, subject, category)
-
-    return token
+    return actualToken
   }
 
   public async retrieve(token: string): Promise<S> {
     return (await this.engine.get(token)) as S
   }
 
-  public async update(token: string, subject: S): Promise<void> {
-    await this.engine.set(token, subject)
+  public async retrieveAll(category: string = 'any'): Promise<S[]> {
+    return (await this.engine.getAll(category)) as S[]
   }
 
   private generateEngine(): EngineInterface {

@@ -31,7 +31,7 @@ export default class MemoryEngine implements EngineInterface {
     return this.registry[token]
   }
 
-  public getGroup(category: string): Record<string, any> {
+  public getAll(category: string): Record<string, any> {
     const tokens = this.categoryGroups[category]
 
     if (tokens) {
@@ -41,19 +41,14 @@ export default class MemoryEngine implements EngineInterface {
         return final
       }, {})
     }
+
+    return {}
   }
 
-  public set(token: string, subject: Record<string, any>, category?: string): void {
+  public set(token: string, category: string, subject: Record<string, any>): void {
     this.registry[token] = subject
-
-    if (category) {
-      this.categoryGroups[category] = this.categoryGroups[category] || []
-      this.categoryGroups[category].push(token)
-      this.tokenCategories[token] = category
-    }
-  }
-
-  public listCategories(): string[] {
-    return Object.keys(this.categoryGroups)
+    this.categoryGroups[category] = this.categoryGroups[category] || []
+    this.categoryGroups[category].push(token)
+    this.tokenCategories[token] = category
   }
 }
