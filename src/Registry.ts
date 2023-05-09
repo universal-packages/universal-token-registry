@@ -44,8 +44,8 @@ export default class Registry<S = Record<string, any>> {
     return (await this.engine.get(token)) as S
   }
 
-  public async retrieveAll(category: string = 'any'): Promise<S[]> {
-    return (await this.engine.getAll(category)) as S[]
+  public async retrieveAll(category: string = 'any'): Promise<Record<string, any>> {
+    return await this.engine.getAll(category)
   }
 
   private generateEngine(): EngineInterface {
