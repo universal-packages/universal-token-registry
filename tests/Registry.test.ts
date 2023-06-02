@@ -1,4 +1,4 @@
-import { Registry, MemoryEngine, EngineInterface } from '../src'
+import { EngineInterface, MemoryEngine, Registry } from '../src'
 
 describe('Registry', (): void => {
   it('calls the set engine right methods', async (): Promise<void> => {
