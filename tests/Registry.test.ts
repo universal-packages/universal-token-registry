@@ -3,7 +3,7 @@ import { EngineInterface, MemoryEngine, Registry } from '../src'
 describe('Registry', (): void => {
   it('calls the set engine right methods', async (): Promise<void> => {
     const mockEngine: EngineInterface = {
-      initialize: jest.fn(),
+      prepare: jest.fn(),
       release: jest.fn(),
       clear: jest.fn(),
       delete: jest.fn(),
@@ -15,7 +15,7 @@ describe('Registry', (): void => {
     const registry = new Registry({ engine: mockEngine })
 
     const token = await registry.register({ property: 'a' }, 'user:1')
-    registry.initialize()
+    registry.prepare()
     registry.retrieve(token)
     registry.dispose(token)
     registry.retrieveAll('user:1')
@@ -24,7 +24,7 @@ describe('Registry', (): void => {
 
     expect(token).toEqual(expect.any(String))
 
-    expect(mockEngine.initialize).toHaveBeenCalled()
+    expect(mockEngine.prepare).toHaveBeenCalled()
     expect(mockEngine.set).toHaveBeenCalledWith(token, 'user:1', { property: 'a' })
     expect(mockEngine.get).toHaveBeenCalledWith(token)
     expect(mockEngine.delete).toHaveBeenCalledWith(token)

@@ -53,7 +53,7 @@ Registers a new data subject under a newly generated token and returns that new 
 const token = await registry.register({ id: 4 })
 ```
 
-#### **`initialize()`** **`async`**
+#### **`prepare()`** **`async`**
 
 Initialize the internal engine in case it needs preparation.
 
@@ -109,7 +109,7 @@ export default class MyEngine implements EngineInterface {
     // Options passed through the adapters sub system
   }
 
-  initialize() {
+  prepare() {
     // Initialize any connection using options
   }
 
