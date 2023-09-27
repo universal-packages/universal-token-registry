@@ -1,6 +1,6 @@
 import { EngineInterface, MemoryEngine, Registry } from '../src'
 
-describe('Registry', (): void => {
+describe(Registry, (): void => {
   it('calls the set engine right methods', async (): Promise<void> => {
     const mockEngine: EngineInterface = {
       prepare: jest.fn(),
