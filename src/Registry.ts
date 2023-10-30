@@ -51,7 +51,8 @@ export default class Registry<S = Record<string, any>> {
 
   private generateEngine(): EngineInterface {
     if (typeof this.options.engine === 'string') {
-      const AdapterModule = resolveAdapter<EngineInterfaceClass>(this.options.engine, {
+      const AdapterModule = resolveAdapter<EngineInterfaceClass>({
+        name: this.options.engine,
         domain: 'token-registry',
         type: 'engine',
         internal: { memory: MemoryEngine }
